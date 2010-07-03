@@ -213,7 +213,7 @@ local settings = NS.settings							-- get the settings
 	end
 
 	--[[ Providing blacklisting. Returns "false" if the ID is found.
-	
+		BOOL FilterBlacklist(INT spellID, TABLE filterSRC)
 	]]
 	lib.FilterBlacklist = function(spellID, list)
 		if ( #list ~= 0 ) then
@@ -224,8 +224,8 @@ local settings = NS.settings							-- get the settings
 		return true
 	end
 
-	--[[
-	
+	--[[ Providing whitelisting. Returns "true" if the ID is found.
+		BOOL FilterWhitelist(INT spellID, TABLE filterSRC)
 	]]
 	lib.FilterWhitelist = function(spellID, list)
 		-- lib.debugging('entering FilterWhitelist() with spellID='..spellID)
