@@ -212,7 +212,7 @@ local settings = NS.settings							-- get the settings
 		return button
 	end
 
-	--[[
+	--[[ Providing blacklisting. Returns "false" if the ID is found.
 	
 	]]
 	lib.FilterBlacklist = function(spellID, list)
