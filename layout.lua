@@ -68,15 +68,15 @@ local core = NS.core									-- get the core
 		self.Buffs:SetPoint('TOP', self, 'BOTTOM', 0, -10)
 		self.Buffs.CreateIcon = lib.CreateAuraIcon
 		self.Buffs.CustomFilter = core.FilterBuffs_player
-		-- self.Debuffs = CreateFrame('Frame', nil, self)
-		-- self.Debuffs:SetHeight(24)
-		-- self.Debuffs:SetWidth(24 * 9)
-		-- self.Debuffs.size = 24
-		-- self.Debuffs.spacing = 7
-		-- self.Debuffs.num = 7
-		-- self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 10)
-		-- self.Debuffs.CreateIcon = lib.CreateAuraIcon
-		-- self.Debuffs.CustomFilter = core.FilterDebuffs_player
+		self.Debuffs = CreateFrame('Frame', nil, self)
+		self.Debuffs:SetHeight(24)
+		self.Debuffs:SetWidth(24 * 9)
+		self.Debuffs.size = 24
+		self.Debuffs.spacing = 7
+		self.Debuffs.num = 7
+		self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 10)
+		self.Debuffs.CreateIcon = lib.CreateAuraIcon
+		self.Debuffs.CustomFilter = core.FilterDebuffs_player
 
 	-- ***** CASTBAR *****
 		self.Castbar = core.CreateCastbar(self)
@@ -153,7 +153,7 @@ local core = NS.core									-- get the core
 		self.Buffs.num = 7
 		self.Buffs:SetPoint('TOP', self, 'BOTTOM', 0, -10)
 		self.Buffs.CreateIcon = lib.CreateAuraIcon
-		-- self.Buffs.CustomFilter = core.FilterBuffs
+		self.Buffs.CustomFilter = core.FilterBuffs
 		self.Debuffs = CreateFrame('Frame', nil, self)
 		self.Debuffs:SetHeight(24)
 		self.Debuffs:SetWidth(24 * 9)
@@ -162,7 +162,7 @@ local core = NS.core									-- get the core
 		self.Debuffs.num = 7
 		self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 15)
 		self.Debuffs.CreateIcon = lib.CreateAuraIcon
-		-- self.Debuffs.CustomFilter = core.FilterDebuffs
+		self.Debuffs.CustomFilter = core.FilterDebuffs
 
 	-- ***** CASTBAR *****
 		self.Castbar = core.CreateCastbar(self)
@@ -299,7 +299,7 @@ local core = NS.core									-- get the core
 		self.Debuffs['growth-x'] = 'LEFT'
 		self.Debuffs:SetPoint('RIGHT', self, 'LEFT', -10, 0)
 		self.Debuffs.CreateIcon = lib.CreateAuraIcon
-		-- self.Debuffs.CustomFilter = core.FilterDebuffs
+		self.Debuffs.CustomFilter = core.FilterDebuffs
 
 	-- ***** CASTBAR *****
 		self.Castbar = core.CreateCastbar(self)

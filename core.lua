@@ -407,7 +407,6 @@ local lib = NS.lib										-- get the library
 		BOOL FilterBuffs(..., INT spellID)
 	]]
 	core.FilterBuffs = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
-		-- lib.debugging('##############################################')
 		-- lib.debugging('entering FilterBuffs() with spellID='..spellID)
 		if ( UnitIsFriend(unit, 'player') ) then
 			return lib.FilterGeneric(spellID, settings.options.friendsBuffs)
