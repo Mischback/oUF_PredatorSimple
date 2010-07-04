@@ -205,13 +205,13 @@ local lib = NS.lib										-- get the library
 		end
 
 		if(IsAddOnLoaded('oUF_DebuffHighlight')) then					-- TODO: Make this shit VISIBLE!
-			self.DebuffHighlight = self:CreateTexture(nil, 'ARTWORK')
-			self.DebuffHighlight:SetAllPoints(self)
+			self.DebuffHighlight = self.Health:CreateTexture(nil, 'ARTWORK')
+			self.DebuffHighlight:SetTexture('Interface\\AddOns\\oUF_Predator\\gfx\\debuff_highlight')
 			self.DebuffHighlight:SetBlendMode('ADD')
 			self.DebuffHighlight:SetVertexColor(0, 0, 0, 0)
-			self.DebuffHighlightAlpha = 1
-			self.DebuffHighlightFilter = true
-			self.DebuffHighlight:SetTexture('Interface\\AddOns\\oUF_Predator\\gfx\\debuff_highlight')
+			self.DebuffHighlight:SetAllPoints(self)
+			self.DebuffHighlightAlpha = 0.5
+			self.DebuffHighlightFilter = false
 		end
 
 		if (IsAddOnLoaded('oUF_RessComm')) then							-- TODO: Make this shit VISIBLE!
@@ -220,7 +220,7 @@ local lib = NS.lib										-- get the library
 			self.ResComm:SetAllPoints(self.Health)
 			self.ResComm:SetTexCoord(0.07, 0.93, 0.07, 0.93)
 			self.ResComm:SetBlendMode("ADD")
-			self.ResComm:SetAlpha(.25)
+			self.ResComm:SetAlpha(0.75)
 		end
 	end
 
