@@ -143,7 +143,35 @@ local lib = NS.lib										-- get the library
 		FRAME CreateComboPointFrame(FRAME self)
 	]]
 	core.CreateComboPointFrame = function(self)
-		-- STUB: Fill this shit!
+		local i
+		local width = self:GetAttribute('initial-width')
+		local cp = CreateFrame('Frame', nil, self)
+		cp:SetWidth(width)
+		cp:SetHeight(10)
+		for i = 5, 1, -1 do
+			cp[i] = CreateFrame('FRAME', nil, cp)
+			cp[i]:SetWidth(width/5)
+			cp[i]:SetHeight(10)
+			cp[i].tex = cp[i]:CreateTexture(nil, 'BORDER')
+			cp[i].tex:SetAllPoints(cp[i])
+			cp[i].tex:SetTexture(settings.src.textures.bartexture)
+			cp[i].tex:SetVertexColor(0.9, 0.3, 0.1, 1)
+			if (i == 5) then
+				cp[i]:SetPoint('TOPRIGHT', cp, 'TOPRIGHT', 0, 0)
+			else
+				cp[i]:SetPoint('TOPRIGHT', cp[i+1], 'TOPLEFT', 0, 0)
+			end
+		end
+		cp[1].back = cp[1]:CreateTexture(nil, 'BACKGROUND')
+		cp[1].back:SetAllPoints(cp)
+		cp[1].back:SetTexture(settings.src.textures.bartexture)
+		cp[1].back:SetVertexColor(0, 0, 0, 1)
+		lib.CreateBorder(cp, 10)
+		for _, tex in ipairs(cp.borderTextures) do
+			tex:SetParent(cp[1])
+		end
+
+		return cp
 	end
 
 	--[[ This must be done for all frames

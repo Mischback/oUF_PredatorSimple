@@ -115,6 +115,8 @@ local core = NS.core									-- get the core
 	local function PredatorSimple_target(self)
 		-- lib.debugging('entering PredatorSimple_target()')
 
+		local _, playerclass = UnitClass('player')
+
 		self:SetAttribute('initial-height', 30)
 		self:SetAttribute('initial-width', settings.options.targetframe_width)
 
@@ -137,7 +139,12 @@ local core = NS.core									-- get the core
 
 		self.Power.value = lib.CreateFontObject(self.Health, 9, settings.src.fonts['Ebrima'])
 		self.Power.value:SetPoint('LEFT', self.Health, 'LEFT', 4, -11)
-		
+
+		if ( (playerclass == 'ROGUE') or (playerclass == 'DRUID') ) then
+			self.CPoints = core.CreateComboPointFrame(self)
+			self.CPoints:SetPoint('BOTTOM', self, 'TOP', 0, 15)
+		end
+
 	-- ***** RAIDICON *****
 		self.RaidIcon = self.Health:CreateTexture(nil, 'OVERLAY')
 		self.RaidIcon:SetPoint('CENTER', self, 'BOTTOMLEFT', 0, 0)
@@ -160,7 +167,11 @@ local core = NS.core									-- get the core
 		self.Debuffs.size = 24
 		self.Debuffs.spacing = 7
 		self.Debuffs.num = 7
-		self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 15)
+		if (self.Cpoints) then
+			self.Debuffs:SetPoint('BOTTOM', self.CPoints, 'TOP', 0, 10)
+		else
+			self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 15)
+		end
 		self.Debuffs.CreateIcon = lib.CreateAuraIcon
 		self.Debuffs.CustomFilter = core.FilterDebuffs
 
