@@ -198,12 +198,10 @@ local lib = NS.lib										-- get the library
 		end
 
 	-- ***** Fade out, if out-of-range *****
-		if ( not unit ) then
-			self.Range = {
-				['insideAlpha'] = 1.0,
-				['outsiteAlpha'] = 0.4
-			}
-		end
+		self.Range = {
+			['insideAlpha'] = 1.0,
+			['outsiteAlpha'] = 0.4
+		}
 		
 		self.Threat = CreateFrame('Frame', self, nil)
 		self.Threat.Update = core.UpdateThreat 
