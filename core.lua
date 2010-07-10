@@ -236,7 +236,7 @@ local lib = NS.lib										-- get the library
 			self.DebuffHighlight:SetVertexColor(0, 0, 0, 0)
 			self.DebuffHighlight:SetAllPoints(self)
 			self.DebuffHighlightAlpha = 0.5
-			self.DebuffHighlightFilter = false
+			self.DebuffHighlightFilter = true
 		end
 
 		if (IsAddOnLoaded('oUF_RessComm')) then							-- TODO: Make this shit VISIBLE!
