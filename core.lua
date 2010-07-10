@@ -198,11 +198,10 @@ local lib = NS.lib										-- get the library
 		end
 
 	-- ***** Fade out, if out-of-range *****
-		self.Range = {
-			['insideAlpha'] = 1.0,
-			['outsiteAlpha'] = 0.4
-		}
-		
+		-- self.Range = CreateFrame('Frame', self, nil)
+		-- self.Range.insideAlpha = 1
+		-- self.Range.outsideAlpha = 0.4
+
 		self.Threat = CreateFrame('Frame', self, nil)
 		self.Threat.Update = core.UpdateThreat 
 	end
@@ -280,10 +279,21 @@ local lib = NS.lib										-- get the library
 		VOID UpdateHealth_min_percent(FRAME health, UNIT unit, INT min, INT max)
 	]]
 	core.UpdateHealth_min_percent = function(health, unit, min, max)
-		if (min ~= max) then
-			health.value:SetFormattedText('|cffDDDDDD%s | %d%%|r', lib.Shorten(min), (min/max)*100)
+		if (UnitIsDead(unit)) then
+			health:SetValue(0)
+			health.value:SetText('dead')
+		elseif (UnitIsGhost(unit)) then
+			health:SetValue(0)
+			health.value:SetText('ghost')
+		elseif (not UnitIsConnected(unit)) then
+			health:SetValue(0)
+			health.value:SetText('off')
 		else
-			health.value:SetText(min)
+			if (min ~= max) then
+				health.value:SetFormattedText('|cffDDDDDD%s | %d%%|r', lib.Shorten(min), (min/max)*100)
+			else
+				health.value:SetText(min)
+			end
 		end
 		health:GetParent():UNIT_NAME_UPDATE(event, unit)
 	end
@@ -292,7 +302,18 @@ local lib = NS.lib										-- get the library
 		VOID UpdateHealth_min(FRAME health, UNIT unit, INT min, INT max)
 	]]
 	core.UpdateHealth_min = function(health, unit, min, max)
-		health.value:SetText(min)
+		if (UnitIsDead(unit)) then
+			health:SetValue(0)
+			health.value:SetText('dead')
+		elseif (UnitIsGhost(unit)) then
+			health:SetValue(0)
+			health.value:SetText('ghost')
+		elseif (not UnitIsConnected(unit)) then
+			health:SetValue(0)
+			health.value:SetText('off')
+		else
+			health.value:SetText(min)
+		end
 		health:GetParent():UNIT_NAME_UPDATE(event, unit)
 	end
 
@@ -300,10 +321,21 @@ local lib = NS.lib										-- get the library
 		VOID UpdateHealth_deficit(FRAME health, UNIT unit, INT min, INT max)
 	]]
 	core.UpdateHealth_deficit = function(health, unit, min, max)
-		if (min ~= max) then
-			health.value:SetFormattedText('|cffCC0000-%s|r', lib.Shorten((max-min)))
+		if (UnitIsDead(unit)) then
+			health:SetValue(0)
+			health.value:SetText('dead')
+		elseif (UnitIsGhost(unit)) then
+			health:SetValue(0)
+			health.value:SetText('ghost')
+		elseif (not UnitIsConnected(unit)) then
+			health:SetValue(0)
+			health.value:SetText('off')
 		else
-			health.value:SetText(min)
+			if (min ~= max) then
+				health.value:SetFormattedText('|cffCC0000-%s|r', lib.Shorten((max-min)))
+			else
+				health.value:SetText(min)
+			end
 		end
 		health:GetParent():UNIT_NAME_UPDATE(event, unit)
 	end
@@ -312,13 +344,24 @@ local lib = NS.lib										-- get the library
 		VOID UpdateHealth_player(FRAME health, UNIT unit, INT min, INT max)
 	]]
 	core.UpdateHealth_deficit_name = function(health, unit, min, max)
-		if (min ~= max) then
-			health:GetParent().Name:Hide()
-			health.value:SetFormattedText('|cffCC0000-%s|r', lib.Shorten((max-min)))
-			health.value:Show()
+		if (UnitIsDead(unit)) then
+			health:SetValue(0)
+			health.value:SetText('dead')
+		elseif (UnitIsGhost(unit)) then
+			health:SetValue(0)
+			health.value:SetText('ghost')
+		elseif (not UnitIsConnected(unit)) then
+			health:SetValue(0)
+			health.value:SetText('off')
 		else
-			health:GetParent().Name:Show()
-			health.value:Hide()
+			if (min ~= max) then
+				health:GetParent().Name:Hide()
+				health.value:SetFormattedText('|cffCC0000-%s|r', lib.Shorten((max-min)))
+				health.value:Show()
+			else
+				health:GetParent().Name:Show()
+				health.value:Hide()
+			end
 		end
 		health:GetParent():UNIT_NAME_UPDATE(event, unit)
 	end
@@ -327,13 +370,24 @@ local lib = NS.lib										-- get the library
 		VOID UpdateHealth_player(FRAME health, UNIT unit, INT min, INT max)
 	]]
 	core.UpdateHealth_percent_name = function(health, unit, min, max)
-		if (min ~= max) then
-			health:GetParent().Name:Hide()
-			health.value:SetFormattedText('|cffDDDDDD%d%%|r', (min/max)*100)
-			health.value:Show()
+		if (UnitIsDead(unit)) then
+			health:SetValue(0)
+			health.value:SetText('dead')
+		elseif (UnitIsGhost(unit)) then
+			health:SetValue(0)
+			health.value:SetText('ghost')
+		elseif (not UnitIsConnected(unit)) then
+			health:SetValue(0)
+			health.value:SetText('off')
 		else
-			health:GetParent().Name:Show()
-			health.value:Hide()
+			if (min ~= max) then
+				health:GetParent().Name:Hide()
+				health.value:SetFormattedText('|cffDDDDDD%d%%|r', (min/max)*100)
+				health.value:Show()
+			else
+				health:GetParent().Name:Show()
+				health.value:Hide()
+			end
 		end
 		health:GetParent():UNIT_NAME_UPDATE(event, unit)
 	end

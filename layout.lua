@@ -357,6 +357,13 @@ local core = NS.core									-- get the core
 		self.RaidIcon:SetWidth(18)
 		self.RaidIcon:SetHeight(18)
 
+	-- ***** Fade out, if out-of-range *****
+		--if ( not unit ) then
+			self.Range = {}
+			self.Range.outsideAlpha = 0.4
+			self.Range.insideAlpha = 1.0
+		-- 	end
+
 	-- ***** oUF-plugins *****
 		core.ApplyPlugins(self)
 
@@ -402,6 +409,13 @@ local core = NS.core									-- get the core
 		self.RaidIcon:SetWidth(15)
 		self.RaidIcon:SetHeight(15)
 		self.RaidIcon:SetPoint('CENTER', self, 'LEFT', 0, 0)
+
+	-- ***** Fade out, if out-of-range *****
+		--if ( not unit ) then
+			self.Range = {}
+			self.Range.outsideAlpha = 0.4
+			self.Range.insideAlpha = 1.0
+		-- end
 
 	-- ***** oUF-plugins *****
 		core.ApplyPlugins(self)
