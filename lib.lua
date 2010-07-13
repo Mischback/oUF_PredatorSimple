@@ -8,10 +8,10 @@
 	own needs.
 ]]
 
-local ADDON_NAME, NS = ...								-- get the addons namespace to exchange functions between core and layout
+local ADDON_NAME, ns = ...								-- get the addons namespace to exchange functions between core and layout
 local lib = CreateFrame('Frame')
 
-local settings = NS.settings							-- get the settings
+local settings = ns.settings							-- get the settings
 
 --[[ FUNCTIONS
 	Now we're starting with our library-functions. 
@@ -57,9 +57,9 @@ local settings = NS.settings							-- get the settings
 	end
 
 	--[[ Is a value in a table?
-	
+		BOOL in_array(MIXED e, TABLE t)
 	]]
-	lib.in_array = function( e, t )
+	lib.in_array = function(e, t)
 		-- lib.debugging('entering in_array() with spellID='..e)
 		for _,v in pairs(t) do
 			if ( v == e ) then
@@ -68,6 +68,13 @@ local settings = NS.settings							-- get the settings
 			end
 		end
 		return false
+	end
+
+	--[[ Collects an aura
+		VOID collectAura(INT id, STRING name)
+	]]
+	lib.collectAura = function(id, name)
+		PredatorSimpleAuraList[id] = name
 	end
 
 	--[[ Creates a font-object
@@ -240,8 +247,9 @@ local settings = NS.settings							-- get the settings
 	--[[ Generic filter-function (distinction between blacklist and whitelist)
 		BOOL FilterGeneric(INT spellID, TABLE filterSRC)
 	]]
-	lib.FilterGeneric = function(spellID, filterSRC)
-		-- lib.debugging('entering FilterGeneric() with spellID='..spellID)
+	lib.FilterGeneric = function(spellID, name, filterSRC)
+		-- lib.debugging('entering FilterGeneric() with spellID='..spellID..' ('..name..')')
+		lib.collectAura(spellID, name)
 		if (filterSRC.mode == 'blacklist') then
 			return lib.FilterBlacklist(spellID, filterSRC.list)
 		else
@@ -250,4 +258,4 @@ local settings = NS.settings							-- get the settings
 	end
 
 -- *****************************************************
-NS.lib = lib											-- handover of the core-functions to the namespace
+ns.lib = lib											-- handover of the core-functions to the namespace

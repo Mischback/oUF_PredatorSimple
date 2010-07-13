@@ -8,7 +8,7 @@
 	own needs.
 ]]
 
-local ADDON_NAME, NS = ...								-- get the addons namespace to exchange functions between core and layout
+local ADDON_NAME, ns = ...								-- get the addons namespace to exchange functions between core and layout
 local settings = CreateFrame('Frame')
 
 --[[ SETTINGS
@@ -130,6 +130,11 @@ local settings = CreateFrame('Frame')
 		options by editing your character specific SavedVars file.
 	]]
 	settings.options = {
+		['strings'] = {
+			['dead'] = 'dead',
+			['ghost'] = 'ghost',
+			['offline'] = 'off',
+		},
 		['playerframe_width'] = 225,
 		['petframe_width'] = 75,
 		['targetframe_width'] = 225,
@@ -172,4 +177,4 @@ local settings = CreateFrame('Frame')
 
 
 -- *****************************************************
-NS.settings = settings									-- handover of the settings to the namespace
+ns.settings = settings									-- handover of the settings to the namespace

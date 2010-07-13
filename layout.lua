@@ -8,12 +8,14 @@
 	own needs.
 ]]
 
-local ADDON_NAME, NS = ...								-- get the addons namespace to exchange functions between core and layout
+local ADDON_NAME, ns = ...								-- get the addons namespace to exchange functions between core and layout
+local oUF = ns.oUF or oUF
+assert(oUF, "<name> was unable to locate oUF install.")
 local oUF_PredatorSimple = CreateFrame('Frame')
 
-local settings = NS.settings							-- get the settings
-local lib = NS.lib										-- get the library
-local core = NS.core									-- get the core
+local settings = ns.settings							-- get the settings
+local lib = ns.lib										-- get the library
+local core = ns.core									-- get the core
 
 -- *****************************************************
 
@@ -468,6 +470,11 @@ oUF_PredatorSimple:SetScript('OnEvent', function(self, event, addon)
 	end
 	settings.options = PredatorSimpleOptions
 	self.options = settings.options
+
+	if not PredatorSimpleAuraList then
+		PredatorSimpleAuraList = {}
+		PredatorSimpleAuraList['locale'] = GetLocale()
+	end
 
 	-- ***** Spawning the Frames ***************************
     oUF:RegisterStyle('oUF_PredatorSimple_player', PredatorSimple_player)

@@ -8,11 +8,11 @@
 	own needs.
 ]]
 
-local ADDON_NAME, NS = ...								-- get the addons namespace to exchange functions between core and layout
+local ADDON_NAME, ns = ...								-- get the addons namespace to exchange functions between core and layout
 local core = CreateFrame('Frame')
 
-local settings = NS.settings							-- get the settings
-local lib = NS.lib										-- get the library
+local settings = ns.settings							-- get the settings
+local lib = ns.lib										-- get the library
 
 --[[ FUNCTIONS
 	Now we're starting with our functions. 
@@ -281,13 +281,13 @@ local lib = NS.lib										-- get the library
 	core.UpdateHealth_min_percent = function(health, unit, min, max)
 		if (UnitIsDead(unit)) then
 			health:SetValue(0)
-			health.value:SetText('dead')
+			health.value:SetText(settings.options.strings.dead)
 		elseif (UnitIsGhost(unit)) then
 			health:SetValue(0)
-			health.value:SetText('ghost')
+			health.value:SetText(settings.options.strings.ghost)
 		elseif (not UnitIsConnected(unit)) then
 			health:SetValue(0)
-			health.value:SetText('off')
+			health.value:SetText(settings.options.strings.offline)
 		else
 			if (min ~= max) then
 				health.value:SetFormattedText('|cffDDDDDD%s | %d%%|r', lib.Shorten(min), (min/max)*100)
@@ -304,13 +304,13 @@ local lib = NS.lib										-- get the library
 	core.UpdateHealth_min = function(health, unit, min, max)
 		if (UnitIsDead(unit)) then
 			health:SetValue(0)
-			health.value:SetText('dead')
+			health.value:SetText(settings.options.strings.dead)
 		elseif (UnitIsGhost(unit)) then
 			health:SetValue(0)
-			health.value:SetText('ghost')
+			health.value:SetText(settings.options.strings.ghost)
 		elseif (not UnitIsConnected(unit)) then
 			health:SetValue(0)
-			health.value:SetText('off')
+			health.value:SetText(settings.options.strings.offline)
 		else
 			health.value:SetText(min)
 		end
@@ -323,13 +323,13 @@ local lib = NS.lib										-- get the library
 	core.UpdateHealth_deficit = function(health, unit, min, max)
 		if (UnitIsDead(unit)) then
 			health:SetValue(0)
-			health.value:SetText('dead')
+			health.value:SetText(settings.options.strings.dead)
 		elseif (UnitIsGhost(unit)) then
 			health:SetValue(0)
-			health.value:SetText('ghost')
+			health.value:SetText(settings.options.strings.ghost)
 		elseif (not UnitIsConnected(unit)) then
 			health:SetValue(0)
-			health.value:SetText('off')
+			health.value:SetText(settings.options.strings.offline)
 		else
 			if (min ~= max) then
 				health.value:SetFormattedText('|cffCC0000-%s|r', lib.Shorten((max-min)))
@@ -346,13 +346,19 @@ local lib = NS.lib										-- get the library
 	core.UpdateHealth_deficit_name = function(health, unit, min, max)
 		if (UnitIsDead(unit)) then
 			health:SetValue(0)
-			health.value:SetText('dead')
+			health.value:SetText(settings.options.strings.dead)
+			health:GetParent().Name:Hide()
+			health.value:Show()
 		elseif (UnitIsGhost(unit)) then
 			health:SetValue(0)
-			health.value:SetText('ghost')
+			health.value:SetText(settings.options.strings.ghost)
+			health:GetParent().Name:Hide()
+			health.value:Show()
 		elseif (not UnitIsConnected(unit)) then
 			health:SetValue(0)
-			health.value:SetText('off')
+			health.value:SetText(settings.options.strings.offline)
+			health:GetParent().Name:Hide()
+			health.value:Show()
 		else
 			if (min ~= max) then
 				health:GetParent().Name:Hide()
@@ -372,13 +378,19 @@ local lib = NS.lib										-- get the library
 	core.UpdateHealth_percent_name = function(health, unit, min, max)
 		if (UnitIsDead(unit)) then
 			health:SetValue(0)
-			health.value:SetText('dead')
+			health.value:SetText(settings.options.strings.dead)
+			health:GetParent().Name:Hide()
+			health.value:Show()
 		elseif (UnitIsGhost(unit)) then
 			health:SetValue(0)
-			health.value:SetText('ghost')
+			health.value:SetText(settings.options.strings.ghost)
+			health:GetParent().Name:Hide()
+			health.value:Show()
 		elseif (not UnitIsConnected(unit)) then
 			health:SetValue(0)
-			health.value:SetText('off')
+			health.value:SetText(settings.options.strings.offline)
+			health:GetParent().Name:Hide()
+			health.value:Show()
 		else
 			if (min ~= max) then
 				health:GetParent().Name:Hide()
@@ -473,14 +485,14 @@ local lib = NS.lib										-- get the library
 	]]
 	core.FilterBuffs_player = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
 		-- lib.debugging(spellID..'('..name..')')
-		return lib.FilterGeneric(spellID, settings.options.playerBuffs)
+		return lib.FilterGeneric(spellID, name, settings.options.playerBuffs)
 	end
 
 	--[[ Filter the players debuffs
 		BOOL FilterDebuffs_player(..., INT spellID)
 	]]
 	core.FilterDebuffs_player = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
-		return lib.FilterGeneric(spellID, settings.options.playerDebuffs)
+		return lib.FilterGeneric(spellID, name, settings.options.playerDebuffs)
 	end
 
 	--[[ Filter buffs
@@ -489,9 +501,9 @@ local lib = NS.lib										-- get the library
 	core.FilterBuffs = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
 		-- lib.debugging('entering FilterBuffs() with spellID='..spellID)
 		if ( UnitIsFriend(unit, 'player') ) then
-			return lib.FilterGeneric(spellID, settings.options.friendsBuffs)
+			return lib.FilterGeneric(spellID, name, settings.options.friendsBuffs)
 		else
-			return lib.FilterGeneric(spellID, settings.options.enemyBuffs)
+			return lib.FilterGeneric(spellID, name, settings.options.enemyBuffs)
 		end
 	end
 
@@ -500,11 +512,11 @@ local lib = NS.lib										-- get the library
 	]]
 	core.FilterDebuffs = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
 		if ( UnitIsFriend(unit, 'player') ) then
-			return lib.FilterGeneric(spellID, settings.options.friendsDebuffs)
+			return lib.FilterGeneric(spellID, name, settings.options.friendsDebuffs)
 		else
-			return lib.FilterGeneric(spellID, settings.options.enemyDebuffs)
+			return lib.FilterGeneric(spellID, name, settings.options.enemyDebuffs)
 		end
 	end
 
 -- *****************************************************
-NS.core = core											-- handover of the core-functions to the namespace
+ns.core = core											-- handover of the core-functions to the namespace
