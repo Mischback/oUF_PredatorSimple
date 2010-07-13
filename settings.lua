@@ -135,6 +135,7 @@ local settings = CreateFrame('Frame')
 			['ghost'] = 'ghost',
 			['offline'] = 'off',
 		},
+		['dungeon_role'] = true,
 		['playerframe_width'] = 225,
 		['petframe_width'] = 75,
 		['targetframe_width'] = 225,

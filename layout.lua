@@ -348,7 +348,7 @@ local core = ns.core									-- get the core
 	-- ***** Text-stuff *****
 		self.Name = lib.CreateFontObject(self.Health, 16, settings.src.fonts['BloodCrow'])
 		self.Name:SetTextColor(0.8, 0.8, 0.8)
-		self.Name:SetPoint('BOTTOMLEFT', self.Health, 'LEFT', 5, 6)
+		self.Name:SetPoint('BOTTOMLEFT', self.Health, 'LEFT', 9, 6)
 
 		self.Health.value = lib.CreateFontObject(self.Health, 10, settings.src.fonts['Ebrima'])
 		self.Health.value:SetPoint('RIGHT', self.Health, 'RIGHT', -2, -2)
@@ -360,11 +360,17 @@ local core = ns.core									-- get the core
 		self.RaidIcon:SetHeight(18)
 
 	-- ***** Fade out, if out-of-range *****
-		--if ( not unit ) then
-			self.Range = {}
-			self.Range.outsideAlpha = 0.4
-			self.Range.insideAlpha = 1.0
-		-- 	end
+		self.Range = {}
+		self.Range.outsideAlpha = 0.4
+		self.Range.insideAlpha = 1.0
+
+	-- ***** LFD *****
+		if ( settings.options.dungeon_role ) then
+			self.LFDRole = self.Health:CreateTexture(nil, 'OVERLAY')
+			self.LFDRole:SetPoint('CENTER', self, 'TOPLEFT', 0, 0)
+			self.LFDRole:SetWidth(14)
+			self.LFDRole:SetHeight(14)
+		end
 
 	-- ***** oUF-plugins *****
 		core.ApplyPlugins(self)
@@ -413,11 +419,9 @@ local core = ns.core									-- get the core
 		self.RaidIcon:SetPoint('CENTER', self, 'LEFT', 0, 0)
 
 	-- ***** Fade out, if out-of-range *****
-		--if ( not unit ) then
-			self.Range = {}
-			self.Range.outsideAlpha = 0.4
-			self.Range.insideAlpha = 1.0
-		-- end
+		self.Range = {}
+		self.Range.outsideAlpha = 0.4
+		self.Range.insideAlpha = 1.0
 
 	-- ***** oUF-plugins *****
 		core.ApplyPlugins(self)
