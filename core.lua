@@ -174,6 +174,35 @@ local lib = ns.lib										-- get the library
 		return cp
 	end
 
+	--[[
+		VOID ComboPointUpdate(FRAME self, STRING event, STRING unit)
+	]]
+	core.ComboPointUpdate = function(self, event, unit)
+		if(unit == 'pet') then return end
+
+		local cp
+		if(UnitExists'vehicle') then
+			cp = GetComboPoints('vehicle', 'target')
+		else
+			cp = GetComboPoints('player', 'target')
+		end
+
+		if ( cp > 0 ) then
+			self.Debuffs:SetPoint('BOTTOM', self.CPoints, 'TOP', 0, 10)
+		else
+			self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 15)
+		end
+
+		local cpoints = self.CPoints
+		for i=1, MAX_COMBO_POINTS do
+			if(i <= cp) then
+				cpoints[i]:Show()
+			else
+				cpoints[i]:Hide()
+			end
+		end
+	end
+
 	--[[ This must be done for all frames
 		VOID AllFrames(FRAME self, INT bordersize)
 	]]

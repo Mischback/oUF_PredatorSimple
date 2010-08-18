@@ -10,7 +10,7 @@
 
 local ADDON_NAME, ns = ...								-- get the addons namespace to exchange functions between core and layout
 local oUF = ns.oUF or oUF
-assert(oUF, "<name> was unable to locate oUF install.")
+assert(oUF, "oUF_PredatorSimple was unable to locate oUF install.")
 local oUF_PredatorSimple = CreateFrame('Frame')
 
 local settings = ns.settings							-- get the settings
@@ -142,10 +142,10 @@ local core = ns.core									-- get the core
 		self.Power.value = lib.CreateFontObject(self.Health, 9, settings.src.fonts['Ebrima'])
 		self.Power.value:SetPoint('LEFT', self.Health, 'LEFT', 4, -11)
 
-		if ( (playerclass == 'ROGUE') or (playerclass == 'DRUID') ) then
-			self.CPoints = core.CreateComboPointFrame(self)
-			self.CPoints:SetPoint('BOTTOM', self, 'TOP', 0, 15)
-		end
+	-- ***** COMBO POINTS ***** (target only)
+		self.CPoints = core.CreateComboPointFrame(self)
+		self.CPoints:SetPoint('BOTTOM', self, 'TOP', 0, 15)
+		self.CPoints.Update = core.ComboPointUpdate
 
 	-- ***** RAIDICON *****
 		self.RaidIcon = self.Health:CreateTexture(nil, 'OVERLAY')
@@ -169,18 +169,12 @@ local core = ns.core									-- get the core
 		self.Debuffs.size = 24
 		self.Debuffs.spacing = 7
 		self.Debuffs.num = 7
-		if (self.Cpoints) then
-			self.Debuffs:SetPoint('BOTTOM', self.CPoints, 'TOP', 0, 10)
-		else
-			self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 15)
-		end
+		self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 15)
 		self.Debuffs.CreateIcon = lib.CreateAuraIcon
 		self.Debuffs.CustomFilter = core.FilterDebuffs
 
 	-- ***** CASTBAR *****
 		self.Castbar = core.CreateCastbar(self)
-
-	-- ***** COMBO POINTS ***** (target only)
 
 	-- ***** oUF-plugins *****
 		core.ApplyPlugins(self)
