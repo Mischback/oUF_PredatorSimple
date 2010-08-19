@@ -145,30 +145,52 @@ local lib = ns.lib										-- get the library
 	core.CreateComboPointFrame = function(self)
 		local i
 		local width = self:GetAttribute('initial-width')
+		local cpWidth = (width / 5) - (20/5)
 		local cp = CreateFrame('Frame', nil, self)
 		cp:SetWidth(width)
 		cp:SetHeight(10)
-		for i = 5, 1, -1 do
-			cp[i] = CreateFrame('FRAME', nil, cp)
-			cp[i]:SetWidth(width/5)
+		-- for i = 5, 1, -1 do
+			-- cp[i] = CreateFrame('FRAME', nil, cp)
+			-- cp[i]:SetWidth(width/5)
+			-- cp[i]:SetHeight(10)
+			-- cp[i].tex = cp[i]:CreateTexture(nil, 'BORDER')
+			-- cp[i].tex:SetAllPoints(cp[i])
+			-- cp[i].tex:SetTexture(settings.src.textures.bartexture)
+			-- cp[i].tex:SetVertexColor(0.9, 0.3, 0.1, 1)
+			-- if (i == 5) then
+				-- cp[i]:SetPoint('TOPRIGHT', cp, 'TOPRIGHT', 0, 0)
+			-- else
+				-- cp[i]:SetPoint('TOPRIGHT', cp[i+1], 'TOPLEFT', 0, 0)
+			-- end
+		-- end
+		-- new code
+		for i = 1, 5 do
+			cp[i] = CreateFrame('Frame', nil, cp)
+			cp[i]:SetWidth(cpWidth)
 			cp[i]:SetHeight(10)
 			cp[i].tex = cp[i]:CreateTexture(nil, 'BORDER')
 			cp[i].tex:SetAllPoints(cp[i])
 			cp[i].tex:SetTexture(settings.src.textures.bartexture)
-			cp[i].tex:SetVertexColor(0.9, 0.3, 0.1, 1)
-			if (i == 5) then
-				cp[i]:SetPoint('TOPRIGHT', cp, 'TOPRIGHT', 0, 0)
-			else
-				cp[i]:SetPoint('TOPRIGHT', cp[i+1], 'TOPLEFT', 0, 0)
-			end
+			cp[i]:SetFrameLevel(cp:GetFrameLevel()-1)
 		end
+		cp[1].tex:SetVertexColor(0, 0.5, 0, 1)
+		cp[1]:SetPoint('TOPLEFT', cp, 'TOPLEFT', 0, 0)
+		cp[2].tex:SetVertexColor(1, 0.8, 0, 1)
+		cp[2]:SetPoint('TOPLEFT', cp[1], 'TOPRIGHT', 5, 0)
+		cp[3].tex:SetVertexColor(1, 0.8, 0, 1)
+		cp[3]:SetPoint('TOPLEFT', cp[2], 'TOPRIGHT', 5, 0)
+		cp[4].tex:SetVertexColor(1, 0.8, 0, 1)
+		cp[4]:SetPoint('TOPLEFT', cp[3], 'TOPRIGHT', 5, 0)
+		cp[5].tex:SetVertexColor(1, 0.1, 0, 1)
+		cp[5]:SetPoint('TOPLEFT', cp[4], 'TOPRIGHT', 5, 0)
+		-- new code
 		cp[1].back = cp[1]:CreateTexture(nil, 'BACKGROUND')
 		cp[1].back:SetAllPoints(cp)
 		cp[1].back:SetTexture(settings.src.textures.bartexture)
 		cp[1].back:SetVertexColor(0, 0, 0, 1)
 		lib.CreateBorder(cp, 10)
 		for _, tex in ipairs(cp.borderTextures) do
-			tex:SetParent(cp[1])
+			tex:SetParent(cp)
 		end
 
 		return cp
@@ -187,19 +209,23 @@ local lib = ns.lib										-- get the library
 			cp = GetComboPoints('player', 'target')
 		end
 
-		if ( cp > 0 ) then
-			self.Debuffs:SetPoint('BOTTOM', self.CPoints, 'TOP', 0, 10)
-		else
-			self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 15)
-		end
-
 		local cpoints = self.CPoints
 		for i=1, MAX_COMBO_POINTS do
 			if(i <= cp) then
-				cpoints[i]:Show()
+				-- cpoints[i]:Show()
+				cpoints[i]:SetAlpha(1)
 			else
-				cpoints[i]:Hide()
+				-- cpoints[i]:Hide()
+				cpoints[i]:SetAlpha(0.15)
 			end
+		end
+
+		if ( cp > 0 ) then
+			self.Debuffs:SetPoint('BOTTOM', self.CPoints, 'TOP', 0, 10)
+			cpoints:Show()
+		else
+			self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 15)
+			cpoints:Hide()
 		end
 	end
 
