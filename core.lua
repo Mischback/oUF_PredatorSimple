@@ -13,6 +13,7 @@ local core = CreateFrame('Frame')
 
 local settings = ns.settings							-- get the settings
 local lib = ns.lib										-- get the library
+local menu = ns.menu									-- get the menu
 
 --[[ FUNCTIONS
 	Now we're starting with our functions. 

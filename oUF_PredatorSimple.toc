@@ -8,5 +8,6 @@
 
 settings.lua
 lib.lua
+menu.xml
 core.lua
 layout.lua

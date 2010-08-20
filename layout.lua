@@ -15,6 +15,7 @@ local oUF_PredatorSimple = CreateFrame('Frame')
 
 local settings = ns.settings							-- get the settings
 local lib = ns.lib										-- get the library
+local menu = ns.menu									-- get the menu
 local core = ns.core									-- get the core
 
 -- *****************************************************

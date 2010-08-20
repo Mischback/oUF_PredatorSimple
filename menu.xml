@@ -1,0 +1,270 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
+	<Script file="menu.lua" />
+
+	<!-- EditBoxTemplate -->
+	<EditBox name="PredatorSimpleEditBoxTemplate" virtual="true">
+		<Size><AbsDimension x="0" y="20" /></Size>
+		<FontString inherits="ChatFontNormal" text="EditBox" />
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture file="Interface\Common\Common-Input-Border">
+					<Size>
+						<AbsDimension x="8" y="20" />
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-5" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0" right="0.0625" top="0" bottom="0.625" />
+				</Texture>
+				<Texture file="Interface\Common\Common-Input-Border">
+					<Size>
+						<AbsDimension x="8" y="20" />
+					</Size>
+					<Anchors>
+						<Anchor point="RIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.9375" right="1" top="0" bottom="0.625" />
+				</Texture>
+				<Texture file="Interface\Common\Common-Input-Border">
+					<Size>
+						<AbsDimension x="0" y="20" />
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="-3" y="0"/>
+							</Offset>
+						</Anchor>
+						<Anchor point="RIGHT">
+							<Offset>
+								<AbsDimension x="-8" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.0625" right="0.9375" top="0" bottom="0.625" />
+				</Texture>
+			</Layer>
+		</Layers>
+	</EditBox>
+
+	<!--  -->
+	<Button name="PredatorSimpleSaveButtonTemplate" inherits="OptionsButtonTemplate" text="Save" virtual="true">
+		<Size><AbsDimension x="80" y="22" /></Size>
+	</Button>
+
+	<!-- Panel Template -->
+	<Frame name="PredatorSimpleConfigurationPageTemplate" virtual="true">
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentCaption" font="Interface\AddOns\oUF_PredatorSimple\media\bloodcrow.ttf" text="oUF_PredatorSimple" justifyH="LEFT" justifyV="TOP">
+					<Color r="1" g="0.8" b="0.3" a="1" />
+					<FontHeight val="18" />
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset><AbsDimension x="15" y="-15" /></Offset>
+						</Anchor>
+						<Anchor point="RIGHT">
+							<Offset><AbsDimension x="-15" y="0" /></Offset>
+						</Anchor>
+					</Anchors>
+					<Shadow>
+						<Offset x="1" y="1" />
+						<Color r="0" g="0" b="0" />
+					</Shadow>
+				</FontString>
+				<FontString name="$parentSubCaption" inherits="GameFontHighlightSmall" justifyH="LEFT" justifyV="TOP" text="SubCaption">
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parentCaption" relativePoint="BOTTOMLEFT">
+							<Offset><AbsDimension x="0" y="-10" /></Offset>
+						</Anchor>
+						<Anchor point="RIGHT">
+							<Offset><AbsDimension x="-15" y="0" /></Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>
+
+	<!-- Position Panel Item Template -->
+	<Frame name="PredatorSimplePositionPanelItemTemplate" virtual="true">
+		<Size><AbsDimension x="0" y="178" /></Size>
+		<Anchors>
+			<Anchor point="LEFT" />
+			<Anchor point="RIGHT">
+				<Offset><AbsDimension x="-5" y="0" /></Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer level="ARTWORK">
+				<FontString name="$parentUFName" inherits="GameFontNormalLarge" justifyH="LEFT" justifyV="TOP" text="UnitFrame">
+					<Anchors>
+						<Anchor point="TOPLEFT" />
+						<Anchor point="RIGHT" />
+					</Anchors>
+				</FontString>
+				<FontString name="$parentXPosCaption" inherits="ChatFontNormal" justifyH="LEFT" justifyV="TOP" text="xPos">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset><AbsDimension x="77" y="-25" /></Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentYPosCaption" inherits="ChatFontNormal" justifyH="LEFT" justifyV="TOP" text="yPos">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset><AbsDimension x="77" y="-50" /></Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentAnchorPointCaption" inherits="ChatFontNormal" justifyH="LEFT" justifyV="TOP" text="AnchorPoint">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset><AbsDimension x="28" y="-75" /></Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentAnchorToPointCaption" inherits="ChatFontNormal" justifyH="LEFT" justifyV="TOP" text="AnchorToPoint">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset><AbsDimension x="14" y="-100" /></Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentAnchorToFrameCaption" inherits="ChatFontNormal" justifyH="LEFT" justifyV="TOP" text="AnchorToFrame">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset><AbsDimension x="10" y="-125" /></Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<EditBox name="$parentXPos" inherits="PredatorSimpleEditBoxTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentXPosCaption">
+						<Offset><AbsDimension x="0" y="2" /></Offset>
+					</Anchor>
+					<Anchor point="LEFT">
+						<Offset><AbsDimension x="120" y="0" /></Offset>
+					</Anchor>
+					<Anchor point="RIGHT" />
+				</Anchors>
+			</EditBox>
+			<EditBox name="$parentYPos" inherits="PredatorSimpleEditBoxTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentYPosCaption">
+						<Offset><AbsDimension x="0" y="2" /></Offset>
+					</Anchor>
+					<Anchor point="LEFT">
+						<Offset><AbsDimension x="120" y="0" /></Offset>
+					</Anchor>
+					<Anchor point="RIGHT" />
+				</Anchors>
+			</EditBox>
+			<EditBox name="$parentAnchorPoint" inherits="PredatorSimpleEditBoxTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentAnchorPointCaption">
+						<Offset><AbsDimension x="0" y="2" /></Offset>
+					</Anchor>
+					<Anchor point="LEFT">
+						<Offset><AbsDimension x="120" y="0" /></Offset>
+					</Anchor>
+					<Anchor point="RIGHT" />
+				</Anchors>
+			</EditBox>
+			<EditBox name="$parentAnchorToPoint" inherits="PredatorSimpleEditBoxTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentAnchorToPointCaption">
+						<Offset><AbsDimension x="0" y="2" /></Offset>
+					</Anchor>
+					<Anchor point="LEFT">
+						<Offset><AbsDimension x="120" y="0" /></Offset>
+					</Anchor>
+					<Anchor point="RIGHT" />
+				</Anchors>
+			</EditBox>
+			<EditBox name="$parentAnchorToFrame" inherits="PredatorSimpleEditBoxTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parentAnchorToFrameCaption">
+						<Offset><AbsDimension x="0" y="2" /></Offset>
+					</Anchor>
+					<Anchor point="LEFT">
+						<Offset><AbsDimension x="120" y="0" /></Offset>
+					</Anchor>
+					<Anchor point="RIGHT" />
+				</Anchors>
+			</EditBox>
+			<Button name="$parentSaveButton" inherits="PredatorSimpleSaveButtonTemplate">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT">
+						<Offset><AbsDimension x="0" y="5" /></Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>PredatorSimpleMenuFunctions.SaveFramePosition(self:GetParent())</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+
+	<!-- Position Panel Template -->
+	<Frame name="PredatorSimplePositionPanelTemplate" inherits="PredatorSimpleConfigurationPageTemplate" virtual="true" hidden="true">
+		<Frames>
+			<ScrollFrame name="$parentScrollBar" inherits="FauxScrollFrameTemplate">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset><AbsDimension x="15" y="-65" /></Offset>
+					</Anchor>
+					<Anchor point="BOTTOMRIGHT">
+						<Offset><AbsDimension x="-40" y="10" /></Offset>
+					</Anchor>
+				</Anchors>
+				<Frames>
+					<Frame name="$parentItem1" inherits="PredatorSimplePositionPanelItemTemplate">
+						<Anchors>
+							<Anchor point="TOP" />
+						</Anchors>
+					</Frame>
+					<Frame name="$parentItem2" inherits="PredatorSimplePositionPanelItemTemplate">
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parentItem1" relativePoint="BOTTOM" />
+						</Anchors>
+					</Frame>
+				</Frames>
+				<Scripts>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(this, offset, 178, PredatorSimpleMenuFunctions.UpdatePositionScrollFrame)
+					</OnVerticalScroll>
+					<OnShow>
+						PredatorSimpleMenuFunctions.UpdatePositionScrollFrame()
+					</OnShow>
+				</Scripts>
+			</ScrollFrame>
+		</Frames>
+		<Scripts>
+			<OnLoad>
+				PredatorSimpleMenuFunctions.PositionPanelOnLoad(self)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
+	<!-- General Panel -->
+	<Frame name="PredatorSimpleGeneralPanel" inherits="PredatorSimpleConfigurationPageTemplate" parent="UIParent" hidden="true">
+		<Scripts>
+			<OnLoad>
+				PredatorSimpleMenuFunctions.GeneralPanelOnLoad(self)
+			</OnLoad>
+		</Scripts>
+	</Frame>
+
+</Ui>
