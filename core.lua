@@ -13,7 +13,7 @@ local core = CreateFrame('Frame')
 
 local settings = ns.settings							-- get the settings
 local lib = ns.lib										-- get the library
-local menu = ns.menu									-- get the menu
+-- local menu = ns.menu									-- get the menu
 
 --[[ FUNCTIONS
 	Now we're starting with our functions. 
@@ -37,6 +37,30 @@ local menu = ns.menu									-- get the menu
 		f.bg:SetAllPoints(f)
 		f.bg:SetVertexColor(0.3, 0.3, 0.3, 1)
 		f.bg:SetTexture(settings.src.textures.bartexture)
+
+		-- Heal Prediction
+		if (settings.options.healPrediction) then
+			local mhpb = CreateFrame('Statusbar', nil, self)
+			mhpb:SetPoint('TOPLEFT', f:GetStatusBarTexture(), 'TOPRIGHT', 0, 0)
+			mhpb:SetPoint('BOTTOMLEFT', f:GetStatusBarTexture(), 'BOTTOMRIGHT', 0, 0)
+			-- mhpb:SetPoint('RIGHT', self, 'RIGHT', 0, 0)
+			mhpb:SetWidth(self:GetWidth())
+			mhpb:SetStatusBarTexture(settings.src.textures.bartexture, 'BORDER')
+			mhpb:SetStatusBarColor(0, 0.7, 0, 0.5)
+			
+			local ohpb = CreateFrame('Statusbar', nil, self)
+			ohpb:SetPoint('TOPLEFT', mhpb:GetStatusBarTexture(), 'TOPRIGHT', 0, 0)
+			ohpb:SetPoint('BOTTOMLEFT', mhpb:GetStatusBarTexture(), 'BOTTOMRIGHT', 0, 0)
+			-- ohpb:SetPoint('RIGHT', self, 'RIGHT', 0, 0)
+			ohpb:SetWidth(self:GetWidth())
+			ohpb:SetStatusBarTexture(settings.src.textures.bartexture, 'BORDER')
+			ohpb:SetStatusBarColor(1, 1, 0, 0.3)
+
+			self.HealPrediction = {}
+			self.HealPrediction.myBar = mhpb
+			self.HealPrediction.otherBar = ohpb
+			self.HealPrediction.maxOverflow = 1.0
+		end
 
 		return f
 	end
@@ -140,12 +164,235 @@ local menu = ns.menu									-- get the menu
 		return rf
 	end
 
+	--[[ Creates a HolyPowerFrame
+		FRAME CreateHolyPowerFrame(FRAME self)
+	]]
+	core.CreateHolyPowerFrame = function(self)
+		local hpf = CreateFrame('Frame', nil, self)
+		hpf:SetWidth(110)
+		hpf:SetHeight(10)
+
+		hpf[1] = hpf:CreateTexture(nil, 'BORDER')
+		hpf[1]:SetTexture(settings.src.textures.bartexture)
+		hpf[1]:SetVertexColor(0.7, 0.5, 0, 1)
+		hpf[1]:SetPoint('TOPLEFT', hpf, 'TOPLEFT', 0, 0)
+		hpf[1]:SetPoint('BOTTOMRIGHT', hpf, 'BOTTOMLEFT', 30, 0)
+
+		hpf[2] = hpf:CreateTexture(nil, 'BORDER')
+		hpf[2]:SetTexture(settings.src.textures.bartexture)
+		hpf[2]:SetVertexColor(0.7, 0.5, 0, 1)
+		hpf[2]:SetPoint('TOPLEFT', hpf, 'TOP', -15, 0)
+		hpf[2]:SetPoint('BOTTOMRIGHT', hpf, 'BOTTOM', 15, 0)
+
+		hpf[3] = hpf:CreateTexture(nil, 'BORDER')
+		hpf[3]:SetTexture(settings.src.textures.bartexture)
+		hpf[3]:SetVertexColor(0.7, 0.5, 0, 1)
+		hpf[3]:SetPoint('TOPLEFT', hpf, 'TOPRIGHT', -30, 0)
+		hpf[3]:SetPoint('BOTTOMRIGHT', hpf, 'BOTTOMRIGHT', 0, 0)
+
+		hpf.shard1 = CreateFrame('Frame', nil, hpf)
+		hpf.shard1:SetAllPoints(hpf[1])
+		hpf.shard1.back = hpf.shard1:CreateTexture(nil, 'BORDER')
+		hpf.shard1.back:SetTexture(settings.src.textures.bartexture)
+		hpf.shard1.back:SetVertexColor(0.7, 0.5, 0, 0.3)
+		hpf.shard1.back:SetAllPoints(hpf.shard1)
+		lib.CreateBorder(hpf.shard1, 10)
+
+		hpf.shard2 = CreateFrame('Frame', nil, hpf)
+		hpf.shard2:SetAllPoints(hpf[2])
+		hpf.shard2.back = hpf.shard2:CreateTexture(nil, 'BORDER')
+		hpf.shard2.back:SetTexture(settings.src.textures.bartexture)
+		hpf.shard2.back:SetVertexColor(0.7, 0.5, 0, 0.3)
+		hpf.shard2.back:SetAllPoints(hpf.shard2)
+		lib.CreateBorder(hpf.shard2, 10)
+
+		hpf.shard3 = CreateFrame('Frame', nil, hpf)
+		hpf.shard3:SetAllPoints(hpf[3])
+		hpf.shard3.back = hpf.shard3:CreateTexture(nil, 'BORDER')
+		hpf.shard3.back:SetTexture(settings.src.textures.bartexture)
+		hpf.shard3.back:SetVertexColor(0.7, 0.5, 0, 0.3)
+		hpf.shard3.back:SetAllPoints(hpf.shard3)
+		lib.CreateBorder(hpf.shard3, 10)
+		
+		return hpf
+	end
+
+	--[[ Creates an EclipseBar
+		FRAME CreateEclipseBar(FRAME self)
+	]]
+	core.CreateEclipseBar = function(self)
+		local eb = CreateFrame('Frame', nil, self)
+		local width = self:GetWidth()
+		eb:SetWidth(width)
+		eb:SetHeight(10)
+		
+		eb.Border = CreateFrame('Frame', nil, eb)
+		eb.Border:SetAllPoints(eb)
+		eb.Border:SetFrameLevel(eb:GetFrameLevel()+3)
+		
+		eb.LunarBar = CreateFrame('StatusBar', nil, eb)
+		eb.LunarBar:SetPoint('LEFT', eb, 'LEFT', 0, 0)
+		eb.LunarBar:SetSize(width, 10)
+		eb.LunarBar:SetStatusBarTexture(settings.src.textures.bartexture)
+		eb.LunarBar:SetStatusBarColor(0.34, 0.1, 0.86)
+
+		eb.SolarBar = CreateFrame('StatusBar', nil, eb)
+		eb.SolarBar:SetPoint('LEFT', eb.LunarBar:GetStatusBarTexture(), 'RIGHT', 0, 0)
+		eb.SolarBar:SetSize(width, 10)
+		eb.SolarBar:SetStatusBarTexture(settings.src.textures.bartexture)
+		eb.SolarBar:SetStatusBarColor(0.95, 0.73, 0.15)
+
+		lib.CreateBorder(eb.Border, 10)
+		for _, tex in ipairs(eb.Border.borderTextures) do
+			tex:SetParent(eb.Border)
+		end
+	
+		return eb
+	end
+
+	--[[
+	
+	]]
+	core.UpdateEclipseBarVisibility = function(unit)
+		if(powerType ~= 'ECLIPSE') then return end
+
+		local eb = self.EclipseBar
+
+		local power = UnitPower(unit, SPELL_POWER_ECLIPSE)
+		local maxPower = UnitPowerMax(unit, SPELL_POWER_ECLIPSE)
+
+		if(eb.LunarBar) then
+			eb.LunarBar:SetMinMaxValues(-maxPower, maxPower)
+			eb.LunarBar:SetValue(power)
+		end
+
+		if(eb.SolarBar) then
+			eb.SolarBar:SetMinMaxValues(-maxPower, maxPower)
+			eb.SolarBar:SetValue(power * -1)
+		end
+	end
+	
+	--[[
+	
+	]]
+	core.CreateSoulShardFrame = function(self)
+		local ssf = CreateFrame('Frame', nil, self)
+		ssf:SetWidth(110)
+		ssf:SetHeight(10)
+
+		ssf[1] = ssf:CreateTexture(nil, 'BORDER')
+		ssf[1]:SetTexture(settings.src.textures.bartexture)
+		ssf[1]:SetVertexColor(1, 0.2, 0.7, 1)
+		ssf[1]:SetPoint('TOPLEFT', ssf, 'TOPLEFT', 0, 0)
+		ssf[1]:SetPoint('BOTTOMRIGHT', ssf, 'BOTTOMLEFT', 30, 0)
+
+		ssf[2] = ssf:CreateTexture(nil, 'BORDER')
+		ssf[2]:SetTexture(settings.src.textures.bartexture)
+		ssf[2]:SetVertexColor(1, 0.2, 0.7, 1)
+		ssf[2]:SetPoint('TOPLEFT', ssf, 'TOP', -15, 0)
+		ssf[2]:SetPoint('BOTTOMRIGHT', ssf, 'BOTTOM', 15, 0)
+
+		ssf[3] = ssf:CreateTexture(nil, 'BORDER')
+		ssf[3]:SetTexture(settings.src.textures.bartexture)
+		ssf[3]:SetVertexColor(1, 0.2, 0.7, 1)
+		ssf[3]:SetPoint('TOPLEFT', ssf, 'TOPRIGHT', -30, 0)
+		ssf[3]:SetPoint('BOTTOMRIGHT', ssf, 'BOTTOMRIGHT', 0, 0)
+
+		ssf.shard1 = CreateFrame('Frame', nil, ssf)
+		ssf.shard1:SetAllPoints(ssf[1])
+		ssf.shard1.back = ssf.shard1:CreateTexture(nil, 'BORDER')
+		ssf.shard1.back:SetTexture(settings.src.textures.bartexture)
+		ssf.shard1.back:SetVertexColor(1, 0.2, 0.7, 0.3)
+		ssf.shard1.back:SetAllPoints(ssf.shard1)
+		lib.CreateBorder(ssf.shard1, 10)
+
+		ssf.shard2 = CreateFrame('Frame', nil, ssf)
+		ssf.shard2:SetAllPoints(ssf[2])
+		ssf.shard2.back = ssf.shard2:CreateTexture(nil, 'BORDER')
+		ssf.shard2.back:SetTexture(settings.src.textures.bartexture)
+		ssf.shard2.back:SetVertexColor(1, 0.2, 0.7, 0.3)
+		ssf.shard2.back:SetAllPoints(ssf.shard2)
+		lib.CreateBorder(ssf.shard2, 10)
+
+		ssf.shard3 = CreateFrame('Frame', nil, ssf)
+		ssf.shard3:SetAllPoints(ssf[3])
+		ssf.shard3.back = ssf.shard3:CreateTexture(nil, 'BORDER')
+		ssf.shard3.back:SetTexture(settings.src.textures.bartexture)
+		ssf.shard3.back:SetVertexColor(1, 0.2, 0.7, 0.3)
+		ssf.shard3.back:SetAllPoints(ssf.shard3)
+		lib.CreateBorder(ssf.shard3, 10)
+		
+		return ssf
+	end
+
+	--[[
+	
+	]]
+	core.CreateTotemBar = function(self)
+		local i
+		local tb = CreateFrame('Frame', nil, self)
+		tb:SetWidth(170)
+		tb:SetHeight(10)
+
+		for i = 1, 4 do
+			tb[i] = CreateFrame('Frame', nil, tb)
+			tb[i]:SetWidth(35)
+			tb[i]:SetHeight(10)
+			tb[i].StatusBar = CreateFrame('StatusBar', nil, tb[i])
+			tb[i].StatusBar:SetPoint('TOPLEFT', tb[i], 'TOPLEFT', 10, 0)
+			tb[i].StatusBar:SetPoint('BOTTOMRIGHT', tb[i], 'BOTTOMRIGHT', 0, 0)
+			tb[i].StatusBar:SetStatusBarTexture(settings.src.textures.bartexture)
+			tb[i].Icon = tb[i]:CreateTexture(nil, "ARTWORK")
+			tb[i].Icon:SetWidth(10)
+			tb[i].Icon:SetHeight(10)
+			tb[i].Icon:SetPoint('TOPLEFT', tb[i], 'TOPLEFT', 0, 0)
+			tb[i].bg = tb[i]:CreateTexture(nil, 'BORDER')
+			tb[i].bg:SetAllPoints(tb[i])
+			tb[i].bg:SetTexture(settings.src.textures.bartexture)
+		end
+
+		tb[1]:SetPoint('TOPLEFT', tb, 'TOPLEFT', 0, 0)
+		tb[1].StatusBar:SetStatusBarColor(0.15, 0.15, 0.15, 1)
+		tb[1].bg:SetVertexColor(0, 0.6, 0, 0.3)
+		tb[2]:SetPoint('TOPLEFT', tb[1], 'TOPRIGHT', 10, 0)
+		tb[2].StatusBar:SetStatusBarColor(0.15, 0.15, 0.15, 1)
+		tb[2].bg:SetVertexColor(0, 0.6, 0, 0.3)
+		tb[3]:SetPoint('TOPLEFT', tb[2], 'TOPRIGHT', 10, 0)
+		tb[3].StatusBar:SetStatusBarColor(0.15, 0.15, 0.15, 1)
+		tb[3].bg:SetVertexColor(0, 0.6, 0, 0.3)
+		tb[4]:SetPoint('TOPLEFT', tb[3], 'TOPRIGHT', 10, 0)
+		tb[4].StatusBar:SetStatusBarColor(0.15, 0.15, 0.15, 1)
+		tb[4].bg:SetVertexColor(0, 0.6, 0, 0.3)
+
+		tb.border1 = CreateFrame('Frame', nil, tb[1])
+		tb.border1:SetAllPoints(tb[1])
+		tb:SetFrameLevel(tb[1]:GetFrameLevel()+3)
+		lib.CreateBorder(tb.border1, 10)
+		tb.border2 = CreateFrame('Frame', nil, tb[2])
+		tb.border2:SetAllPoints(tb[2])
+		tb:SetFrameLevel(tb[2]:GetFrameLevel()+3)
+		lib.CreateBorder(tb.border2, 10)
+		tb.border3 = CreateFrame('Frame', nil, tb[3])
+		tb.border3:SetAllPoints(tb[3])
+		tb:SetFrameLevel(tb[3]:GetFrameLevel()+3)
+		lib.CreateBorder(tb.border3, 10)
+		tb.border4 = CreateFrame('Frame', nil, tb[4])
+		tb.border4:SetAllPoints(tb[4])
+		tb:SetFrameLevel(tb[4]:GetFrameLevel()+3)
+		lib.CreateBorder(tb.border4, 10)
+		
+		tb.Destroy = true
+		
+		return tb
+	end
+
 	--[[ Creates a ComboPointFrame
 		FRAME CreateComboPointFrame(FRAME self)
 	]]
 	core.CreateComboPointFrame = function(self)
 		local i
-		local width = self:GetAttribute('initial-width')
+		-- local width = self:GetAttribute('initial-width')
+		local width = self:GetWidth()
 		local cpWidth = (width / 5) - (20/5)
 		local cp = CreateFrame('Frame', nil, self)
 		cp:SetWidth(width)
@@ -259,7 +506,7 @@ local menu = ns.menu									-- get the menu
 		-- self.Range.outsideAlpha = 0.4
 
 		self.Threat = CreateFrame('Frame', self, nil)
-		self.Threat.Update = core.UpdateThreat 
+		self.Threat.Override = core.UpdateThreat 
 	end
 
 	--[[ Apply general oUF-plugins
@@ -267,23 +514,6 @@ local menu = ns.menu									-- get the menu
 	]]
 	core.ApplyPlugins = function(self)
 		-- lib.debugging('entering ApplyPlugins()')
-
-		if(IsAddOnLoaded('oUF_HealComm4')) then
-			self.HealCommBar = CreateFrame('StatusBar', nil, self.Health)
-			self.HealCommBar:SetHeight(0)
-			self.HealCommBar:SetWidth(0)
-			self.HealCommBar:SetStatusBarTexture(settings.src.textures.bartexture)
-			self.HealCommBar:SetStatusBarColor(0, 1, 0, 0.25)
-			self.HealCommBar:SetAllPoints(self.Health)
-			self.allowHealCommOverflow = false
-		end
-
-		if(IsAddOnLoaded('oUF_Smooth')) then
-			self.Health.Smooth = true
-			if (self.Power) then
-				self.Power.Smooth = true
-			end
-		end
 
 		if(IsAddOnLoaded('oUF_DebuffHighlight')) then					-- TODO: Make this shit VISIBLE!
 			self.DebuffHighlight = self.Health:CreateTexture(nil, 'ARTWORK')
@@ -293,15 +523,6 @@ local menu = ns.menu									-- get the menu
 			self.DebuffHighlight:SetAllPoints(self)
 			self.DebuffHighlightAlpha = 0.5
 			self.DebuffHighlightFilter = true
-		end
-
-		if (IsAddOnLoaded('oUF_RessComm')) then							-- TODO: Make this shit VISIBLE!
-			self.ResComm = self.Health:CreateTexture(nil, 'OVERLAY')
-			self.ResComm:SetTexture([=[Interface\Icons\Spell_Holy_Resurrection]=])
-			self.ResComm:SetAllPoints(self.Health)
-			self.ResComm:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-			self.ResComm:SetBlendMode("ADD")
-			self.ResComm:SetAlpha(0.75)
 		end
 	end
 
@@ -318,7 +539,7 @@ local menu = ns.menu									-- get the menu
 		lib.SetBorderColor(self, r, g, b)
 	end
 
--- *****************************************************	
+-- ************************************************************************************************	
 
 	--[[ Health-value of the player-frame
 		VOID UpdateHealth_player(FRAME health, UNIT unit, INT min, INT max)
@@ -534,21 +755,21 @@ local menu = ns.menu									-- get the menu
 		end
 	end
 
--- *****************************************************
+-- ************************************************************************************************
 
 	--[[ Filter the players buffs
 		BOOL FilterBuffs_player(..., INT spellID)
 	]]
 	core.FilterBuffs_player = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
 		-- lib.debugging(spellID..'('..name..')')
-		return lib.FilterGeneric(spellID, name, settings.options.playerBuffs)
+		return lib.FilterGeneric(spellID, name, settings.options.playerBuffs, icon, caster)
 	end
 
 	--[[ Filter the players debuffs
 		BOOL FilterDebuffs_player(..., INT spellID)
 	]]
 	core.FilterDebuffs_player = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
-		return lib.FilterGeneric(spellID, name, settings.options.playerDebuffs)
+		return lib.FilterGeneric(spellID, name, settings.options.playerDebuffs, icon, caster)
 	end
 
 	--[[ Filter buffs
@@ -557,9 +778,9 @@ local menu = ns.menu									-- get the menu
 	core.FilterBuffs = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
 		-- lib.debugging('entering FilterBuffs() with spellID='..spellID)
 		if ( UnitIsFriend(unit, 'player') ) then
-			return lib.FilterGeneric(spellID, name, settings.options.friendsBuffs)
+			return lib.FilterGeneric(spellID, name, settings.options.friendsBuffs, icon, caster)
 		else
-			return lib.FilterGeneric(spellID, name, settings.options.enemyBuffs)
+			return lib.FilterGeneric(spellID, name, settings.options.enemyBuffs, icon, caster)
 		end
 	end
 
@@ -568,11 +789,22 @@ local menu = ns.menu									-- get the menu
 	]]
 	core.FilterDebuffs = function(icons, unit, icon, name, rank, texture, count, dtype, duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
 		if ( UnitIsFriend(unit, 'player') ) then
-			return lib.FilterGeneric(spellID, name, settings.options.friendsDebuffs)
+			return lib.FilterGeneric(spellID, name, settings.options.friendsDebuffs, icon, caster)
 		else
-			return lib.FilterGeneric(spellID, name, settings.options.enemyDebuffs)
+			return lib.FilterGeneric(spellID, name, settings.options.enemyDebuffs, icon, caster)
 		end
 	end
 
--- *****************************************************
+	--[[
+	
+	]]
+	core.PostUpdateIcon = function(icons, unit, icon, index, offset, filter, isDebuff)
+		if ( settings.src.playerUnits[icon.caster] ) then
+			icon.icon:SetDesaturated(false)	
+		else
+			icon.icon:SetDesaturated(true)	
+		end
+	end
+
+-- ************************************************************************************************
 ns.core = core											-- handover of the core-functions to the namespace

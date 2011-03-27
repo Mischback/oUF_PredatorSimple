@@ -15,7 +15,7 @@ local oUF_PredatorSimple = CreateFrame('Frame')
 
 local settings = ns.settings							-- get the settings
 local lib = ns.lib										-- get the library
-local menu = ns.menu									-- get the menu
+-- local menu = ns.menu									-- get the menu
 local core = ns.core									-- get the core
 
 -- *****************************************************
@@ -23,13 +23,14 @@ local core = ns.core									-- get the core
 	--[[ Styling of the player-frame
 		This contains only player-specific layout-components.
 	]]
-	local function PredatorSimple_player(self)
+	local function PredatorSimple_player(self, unit, isSingle)
 		-- lib.debugging('entering PredatorSimple_player()')
 
 		local _, playerclass = UnitClass('player')
 
-		self:SetAttribute('initial-height', 30)
-		self:SetAttribute('initial-width', settings.options.playerframe_width)
+		-- self:SetAttribute('initial-height', 30)
+		-- self:SetAttribute('initial-width', settings.options.playerframe_width)
+		self:SetSize(settings.options.playerframe_width, 30)
 
 	-- ***** HEALTH *****
 		self.Health = core.CreateHealthBar(self, 22)
@@ -85,24 +86,47 @@ local core = ns.core									-- get the core
 		self.Castbar = core.CreateCastbar(self)
 		self.Castbar:SetPoint('TOPLEFT', UIParent, 'CENTER', -(settings.options.playercastbar_width/2), settings.options.playercastbar_ypos)
 		self.Castbar:SetPoint('BOTTOMRIGHT', UIParent, 'CENTER', (settings.options.playercastbar_width/2), settings.options.playercastbar_ypos - settings.options.playercastbar_height)
-		lib.CreateBorder(self.Castbar, 10)
+		self.Castbar.Border = CreateFrame('Frame', nil, self.Castbar)
+		self.Castbar.Border:SetAllPoints(self.Castbar)
+		self.Castbar.Border:SetFrameLevel(self.Castbar:GetFrameLevel() + 5)
+		lib.CreateBorder(self.Castbar.Border, 10)
 
 	-- ***** RUNES (Deathknight) ***** (player only)
 		if (playerclass == 'DEATHKNIGHT') then
 			self.Runes = core.CreateRuneFrame(self)
 			self.Runes:SetPoint('BOTTOM', self, 'TOP', 0, 10)
+			self.Debuffs:SetPoint('BOTTOM', self.Runes, 'TOP', 0, 10)
 		end
 
-	-- ***** oUF_PowerSpark ***** (player only)
-		if(IsAddOnLoaded('oUF_PowerSpark')) then
-			self.Spark = self.Power:CreateTexture(nil, 'OVERLAY')
-			self.Spark:SetTexture('Interface\\CastingBar\\UI-CastingBar-Spark')
-			self.Spark:SetBlendMode('ADD')
-			self.Spark:SetHeight(10)
-			self.Spark:SetWidth(10)
-			self.Spark.manatick = true
-			self.Spark.highAlpha = 1
-			self.Spark.highAlpha = 0.65
+	-- ***** HOLY POWER (Paladin) ***** (player only)
+		if (playerclass == 'PALADIN') then
+			self.HolyPower = core.CreateHolyPowerFrame(self)
+			self.HolyPower:SetPoint('BOTTOM', self, 'TOP', 0, 10)
+			self.Debuffs:SetPoint('BOTTOM', self.HolyPower, 'TOP', 0, 10)
+		end
+		
+	-- ***** ECLIPSE (Druid) ***** (player only)
+		if (playerclass == 'DRUID') then
+			self.EclipseBar = core.CreateEclipseBar(self)
+			self.EclipseBar:SetPoint('BOTTOM', self, 'TOP', 0, 10)
+			self.EclipseBar.PostUpdateVisibility = core.UpdateEclipseBarVisibility
+			self.Debuffs:SetPoint('BOTTOM', self.EclipseBar, 'TOP', 0, 10)
+		end
+
+	-- ***** SOUL SHARDS (Warlock) ***** (player only)
+		if (playerclass == 'WARLOCK') then
+			self.SoulShards = core.CreateSoulShardFrame(self)
+			self.SoulShards:SetPoint('BOTTOM', self, 'TOP', 0, 10)
+			self.Debuffs:SetPoint('BOTTOM', self.SoulShards, 'TOP', 0, 10)
+		end
+
+	-- ***** TOTEMS (Shaman) ***** (player only)
+		if (playerclass == 'SHAMAN') then
+			if (IsAddOnLoaded('oUF_boring_totembar')) then
+				self.TotemBar = core.CreateTotemBar(self)
+				self.TotemBar:SetPoint('BOTTOM', self, 'TOP', 0, 10)
+				self.Debuffs:SetPoint('BOTTOM', self.TotemBar, 'TOP', 0, 10)
+			end
 		end
 
 	-- ***** oUF-plugins *****
@@ -120,8 +144,9 @@ local core = ns.core									-- get the core
 
 		local _, playerclass = UnitClass('player')
 
-		self:SetAttribute('initial-height', 30)
-		self:SetAttribute('initial-width', settings.options.targetframe_width)
+		-- self:SetAttribute('initial-height', 30)
+		-- self:SetAttribute('initial-width', settings.options.targetframe_width)
+		self:SetSize(settings.options.targetframe_width, 30)
 
 	-- ***** HEALTH *****
 		self.Health = core.CreateHealthBar(self, 22)
@@ -146,7 +171,7 @@ local core = ns.core									-- get the core
 	-- ***** COMBO POINTS ***** (target only)
 		self.CPoints = core.CreateComboPointFrame(self)
 		self.CPoints:SetPoint('BOTTOM', self, 'TOP', 0, 15)
-		self.CPoints.Update = core.ComboPointUpdate
+		self.CPoints.Override = core.ComboPointUpdate
 
 	-- ***** RAIDICON *****
 		self.RaidIcon = self.Health:CreateTexture(nil, 'OVERLAY')
@@ -164,6 +189,7 @@ local core = ns.core									-- get the core
 		self.Buffs:SetPoint('TOP', self, 'BOTTOM', 0, -10)
 		self.Buffs.CreateIcon = lib.CreateAuraIcon
 		self.Buffs.CustomFilter = core.FilterBuffs
+		self.Buffs.PostUpdateIcon = core.PostUpdateIcon
 		self.Debuffs = CreateFrame('Frame', nil, self)
 		self.Debuffs:SetHeight(24)
 		self.Debuffs:SetWidth(24 * 9)
@@ -173,6 +199,7 @@ local core = ns.core									-- get the core
 		self.Debuffs:SetPoint('BOTTOM', self, 'TOP', 0, 15)
 		self.Debuffs.CreateIcon = lib.CreateAuraIcon
 		self.Debuffs.CustomFilter = core.FilterDebuffs
+		self.Debuffs.PostUpdateIcon = core.PostUpdateIcon
 
 	-- ***** CASTBAR *****
 		self.Castbar = core.CreateCastbar(self)
@@ -190,8 +217,9 @@ local core = ns.core									-- get the core
 	local function PredatorSimple_pet(self)
 		-- lib.debugging('entering PredatorSimple_pet()')
 
-		self:SetAttribute('initial-height', 30)
-		self:SetAttribute('initial-width', settings.options.petframe_width)
+		-- self:SetAttribute('initial-height', 30)
+		-- self:SetAttribute('initial-width', settings.options.petframe_width)
+		self:SetSize(settings.options.petframe_width, 30)
 
 	-- ***** HEALTH *****
 		self.Health = core.CreateHealthBar(self, 22)
@@ -227,8 +255,9 @@ local core = ns.core									-- get the core
 	local function PredatorSimple_targettarget(self)
 		-- lib.debugging('entering PredatorSimple_targettarget()')
 
-		self:SetAttribute('initial-height', 30)
-		self:SetAttribute('initial-width', settings.options.targettarget_width)
+		-- self:SetAttribute('initial-height', 30)
+		-- self:SetAttribute('initial-width', settings.options.targettarget_width)
+		self:SetSize(settings.options.targettarget_width, 30)
 
 	-- ***** HEALTH *****
 		self.Health = core.CreateHealthBar(self, 30)
@@ -262,8 +291,9 @@ local core = ns.core									-- get the core
 	local function PredatorSimple_focus(self)
 		-- lib.debugging('entering PredatorSimple_focus()')
 
-		self:SetAttribute('initial-height', 25)
-		self:SetAttribute('initial-width', settings.options.focusframe_width)
+		-- self:SetAttribute('initial-height', 25)
+		-- self:SetAttribute('initial-width', settings.options.focusframe_width)
+		self:SetSize(settings.options.focusframe_width, 25)
 
 	-- ***** HEALTH *****
 		self.Health = core.CreateHealthBar(self, 25)
@@ -297,6 +327,7 @@ local core = ns.core									-- get the core
 		self.Buffs:SetPoint('LEFT', self, 'RIGHT', 10, 0)
 		self.Buffs.CreateIcon = lib.CreateAuraIcon
 		self.Buffs.CustomFilter = core.FilterBuffs
+		self.Buffs.PostUpdateIcon = core.PostUpdateIcon
 		self.Debuffs = CreateFrame('Frame', nil, self)
 		self.Debuffs:SetHeight(24)
 		self.Debuffs:SetWidth(24 * 4)
@@ -308,6 +339,7 @@ local core = ns.core									-- get the core
 		self.Debuffs:SetPoint('RIGHT', self, 'LEFT', -10, 0)
 		self.Debuffs.CreateIcon = lib.CreateAuraIcon
 		self.Debuffs.CustomFilter = core.FilterDebuffs
+		-- self.Debuffs.PostUpdateIcon = core.PostUpdateIcon
 
 	-- ***** CASTBAR *****
 		self.Castbar = core.CreateCastbar(self)
@@ -328,8 +360,9 @@ local core = ns.core									-- get the core
 	local function PredatorSimple_party(self)
 		-- lib.debugging('entering PredatorSimple_party()')
 
-		self:SetAttribute('initial-height', 25)
-		self:SetAttribute('initial-width', settings.options.partyframe_width)
+		-- self:SetAttribute('initial-height', 25)
+		-- self:SetAttribute('initial-width', settings.options.partyframe_width)
+		self:SetSize(settings.options.partyframe_width, 25)
 
 	-- ***** HEALTH *****
 		self.Health = core.CreateHealthBar(self, 22)
@@ -383,11 +416,13 @@ local core = ns.core									-- get the core
 	local function PredatorSimple_raid(self)
 		-- lib.debugging('entering PredatorSimple_raid()')
 
-		self:SetAttribute('initial-height', 20)
+		-- self:SetAttribute('initial-height', 20)
 		if (settings.options.healermode) then
-			self:SetAttribute('initial-width', settings.options.raidhealer_width)
+			-- self:SetAttribute('initial-width', settings.options.raidhealer_width)
+			self:SetSize(settings.options.raidhealer_width, 20)
 		else
-			self:SetAttribute('initial-width', settings.options.raidframe_width)
+			-- self:SetAttribute('initial-width', settings.options.raidframe_width)
+			self:SetSize(settings.options.raidframe_width, 20)
 		end
 
 	-- ***** HEALTH *****
@@ -498,7 +533,13 @@ oUF_PredatorSimple:SetScript('OnEvent', function(self, event, addon)
 	-- *****************************************************
     oUF:RegisterStyle('oUF_PredatorSimple_party', PredatorSimple_party)
     oUF:SetActiveStyle('oUF_PredatorSimple_party')
-	local party = oUF:SpawnHeader('oUF_PredatorSimple_party', nil, 'party', 'showParty', true, 'yOffset', -15, 'xOffset', -20, 'showPlayer', true)
+	local party = oUF:SpawnHeader('oUF_PredatorSimple_party', 
+									nil, 
+									'party', 
+									'showParty', true, 
+									'yOffset', -15, 
+									'xOffset', -20, 
+									'showPlayer', true)
 	if (settings.options.healermode) then
 		party:SetPoint(settings.positions.partyframe_healer.anchorPoint, settings.positions.partyframe_healer.anchorToFrame, settings.positions.partyframe_healer.anchorToPoint, settings.positions.partyframe_healer.x, settings.positions.partyframe_healer.y)
 	else
@@ -507,7 +548,7 @@ oUF_PredatorSimple:SetScript('OnEvent', function(self, event, addon)
 	-- *****************************************************
     oUF:RegisterStyle('oUF_PredatorSimple_raid', PredatorSimple_raid)
     oUF:SetActiveStyle('oUF_PredatorSimple_raid')
-	local raid = oUF:SpawnHeader('oUF_PredatorSimple_raid1', nil, 'raid', 'showRaid', true, 'yOffset', -10, 'xOffset', 5, 'groupFilter', 1)
+	local raid = oUF:SpawnHeader('oUF_PredatorSimple_raid1', nil, nil, 'showRaid', true, 'yOffset', -10, 'xOffset', 5, 'groupFilter', 1)
 	if (settings.options.healermode) then
 		raid:SetPoint(settings.positions.raidframe_healer.anchorPoint, settings.positions.raidframe_healer.anchorToFrame, settings.positions.raidframe_healer.anchorToPoint, settings.positions.raidframe_healer.x, settings.positions.raidframe_healer.y)
 	else
@@ -531,4 +572,37 @@ oUF_PredatorSimple:SetScript('OnEvent', function(self, event, addon)
 		maintank:SetPoint(settings.positions.mtframe.anchorPoint, settings.positions.mtframe.anchorToFrame, settings.positions.mtframe.anchorToPoint, settings.positions.mtframe.x, settings.positions.mtframe.y)
 	end
 
+end)
+
+-- Handling, wheather the Raid- or the Party-frame is shown
+-- FIX: Quick'n'dirty fix until the oUF-conditions work again
+local partyToggle = CreateFrame('Frame')        
+partyToggle:RegisterEvent('PLAYER_LOGIN')
+partyToggle:RegisterEvent('RAID_ROSTER_UPDATE')
+partyToggle:RegisterEvent('PARTY_LEADER_CHANGED')
+partyToggle:RegisterEvent('PARTY_MEMBERS_CHANGED')
+partyToggle:SetScript('OnEvent', function(self)
+	if(InCombatLockdown()) then
+		self:RegisterEvent('PLAYER_REGEN_ENABLED')
+	else
+		self:UnregisterEvent('PLAYER_REGEN_ENABLED')
+		-- this results in the following behaviour: If you're in a raid, the party frame will be hidden, no mather how many members
+		-- your raid already has. This means, the party will be hidden, if the party leader clicks the button to create a raid.
+		-- if you want to switch to raid view later (meaning, if the members not longer fit into the party frame), you may change the following line accordingly.
+		if(GetNumRaidMembers() > 0) then
+			_G['oUF_PredatorSimple_party']:Hide()
+			_G['oUF_PredatorSimple_raid1']:Show()
+			_G['oUF_PredatorSimple_raid2']:Show()
+			_G['oUF_PredatorSimple_raid3']:Show()
+			_G['oUF_PredatorSimple_raid4']:Show()
+			_G['oUF_PredatorSimple_raid5']:Show()
+		else
+			_G['oUF_PredatorSimple_party']:Show()
+			_G['oUF_PredatorSimple_raid1']:Hide()
+			_G['oUF_PredatorSimple_raid2']:Hide()
+			_G['oUF_PredatorSimple_raid3']:Hide()
+			_G['oUF_PredatorSimple_raid4']:Hide()
+			_G['oUF_PredatorSimple_raid5']:Hide()
+		end
+	end
 end)

@@ -27,6 +27,9 @@ local settings = CreateFrame('Frame')
 		['textures'] = {
 			['bartexture'] = [[Interface\AddOns\oUF_PredatorSimple\media\bar]],
 			['bordertexture'] = [[Interface\AddOns\oUF_PredatorSimple\media\border]],
+			['holypower1'] = [[Interface\AddOns\oUF_PredatorSimple\media\hp1]],
+			['holypower2'] = [[Interface\AddOns\oUF_PredatorSimple\media\hp2]],
+			['holypower3'] = [[Interface\AddOns\oUF_PredatorSimple\media\hp3]],
 		},
 		['threatColors'] = {
 			[0] = { 0.5, 0.5, 0.5 },
@@ -38,6 +41,11 @@ local settings = CreateFrame('Frame')
 			bgFile = [[Interface\AddOns\oUF_PredatorSimple\media\solid]], tile = true, tileSize = 16,
 			edgeFile = [[Interface\AddOns\oUF_PredatorSimple\media\solid]], edgeSize = 1,
 			insets = { left = 1, right = 1, top = 1, bottom = 1 },
+		},
+		['playerUnits'] = {
+			player = true,
+			pet = true,
+			vehicle = true,
 		}
 	}
 
@@ -174,6 +182,7 @@ local settings = CreateFrame('Frame')
 			['mode'] = 'blacklist',
 			['list'] = {},
 		},
+		['healPrediction'] = true,
 	}
 
 

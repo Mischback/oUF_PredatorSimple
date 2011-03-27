@@ -17,9 +17,34 @@ local settings = ns.settings							-- get the settings
 	Now we're starting with our library-functions. 
 ]]
 
+	--[[ Updates the Tooltip on Auras
+		VOID AuraUpdateTooltip(FRAME self)
+	]]
+	local AuraUpdateTooltip = function(self)
+		GameTooltip:SetUnitAura(self.parent:GetParent().unit, self:GetID(), self.filter)
+	end
+
+
+	--[[ Shows the Toolttip on Auras
+		VOID AuraTTOnEnter(FRAME self)
+	]]
+	local AuraTTOnEnter = function(self)
+		if(not self:IsVisible()) then return end
+
+		GameTooltip:SetOwner(self, "ANCHOR_BOTTOMRIGHT")
+		self:UpdateTooltip()
+	end
+
+
+	--[[ Hides the Tooltip on Auras
+		VOID AuraTTOnLeave()
+	]]
+	local AuraTTOnLeave = function()
+		GameTooltip:Hide()
+	end
+
 	--[[ Debugging to ChatFrame
 		VOID debugging(STRING text)
-		Adds the given 'text' to the ChatFrame1
 	]]
 	lib.debugging = function(text)
 		DEFAULT_CHAT_FRAME:AddMessage('|cffffd700oUF_PredatorSimple:|r |cffeeeeee'..text..'|r')
@@ -210,6 +235,10 @@ local settings = ns.settings							-- get the settings
 		cd:SetAllPoints(button)
 		button.cd = cd
 
+		button.UpdateTooltip = AuraUpdateTooltip
+		button:SetScript("OnEnter", AuraTTOnEnter)
+		button:SetScript("OnLeave", AuraTTOnLeave)
+
 		table.insert(icons, button)
 
 		lib.CreateBorder(button, 10)
@@ -247,9 +276,10 @@ local settings = ns.settings							-- get the settings
 	--[[ Generic filter-function (distinction between blacklist and whitelist)
 		BOOL FilterGeneric(INT spellID, TABLE filterSRC)
 	]]
-	lib.FilterGeneric = function(spellID, name, filterSRC)
+	lib.FilterGeneric = function(spellID, name, filterSRC, icon, caster)
 		-- lib.debugging('entering FilterGeneric() with spellID='..spellID..' ('..name..')')
 		lib.collectAura(spellID, name)
+		icon.caster = caster
 		if (filterSRC.mode == 'blacklist') then
 			return lib.FilterBlacklist(spellID, filterSRC.list)
 		else
@@ -257,5 +287,5 @@ local settings = ns.settings							-- get the settings
 		end
 	end
 
--- *****************************************************
+-- ************************************************************************************************
 ns.lib = lib											-- handover of the core-functions to the namespace

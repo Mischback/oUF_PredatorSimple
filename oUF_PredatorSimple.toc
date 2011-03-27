@@ -1,13 +1,13 @@
-## Interface: 30300
+## Interface: 40000
 ## Author: Mischback
 ## Title: oUF|cffffd700 Predator_Simple|r
-## OptionalDeps: oUF_DebuffHighlight, oUF_HealComm4, oUF_PowerSpark, oUF_ReadyCheck, oUF_ResComm, oUF_Smooth
+## RequiredDeps: oUF
+## OptionalDeps: oUF_DebuffHighlight, oUF_boring_totembar
 ## X-Category: UnitFrame
 ## SavedVariablesPerCharacter: PredatorSimplePositions, PredatorSimpleOptions
 ## SavedVariables: PredatorSimpleAuraList
 
 settings.lua
 lib.lua
-menu.xml
 core.lua
 layout.lua
